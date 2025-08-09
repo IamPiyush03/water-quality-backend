@@ -2,7 +2,7 @@ services:
   - type: web
     name: water-quality-backend
     env: python
-    plan: starter
+    plan: free
     buildCommand: chmod +x build.sh && ./build.sh
     startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
     envVars:
@@ -24,4 +24,4 @@ databases:
   - name: water-quality-db
     databaseName: water_quality
     user: water_quality_user
-    plan: starter 
+    plan: free 
