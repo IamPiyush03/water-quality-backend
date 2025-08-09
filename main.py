@@ -146,6 +146,10 @@ recommender = WaterQualityRecommender()
 # Initialize visualizer with a database session
 @app.on_event("startup")
 async def startup_event():
+    # Create database tables if they don't exist
+    from database.config import Base, engine
+    Base.metadata.create_all(bind=engine)
+    
     db = SessionLocal()
     try:
         app.state.visualizer = WaterQualityVisualizer(session=db)

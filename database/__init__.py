@@ -21,5 +21,5 @@ from .crud import (
     update_recommendation
 )
 
-# Create all tables
-Base.metadata.create_all(bind=engine) 
+# Database tables will be created during application startup
+# Base.metadata.create_all(bind=engine) 

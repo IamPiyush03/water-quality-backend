@@ -17,8 +17,5 @@ else
     python train_model.py
 fi
 
-# Initialize database
-python init_db.py
-
-# Seed data if needed
-python seed_data.py 
+# Database initialization will happen during application startup
+echo "Database will be initialized during application startup" 
