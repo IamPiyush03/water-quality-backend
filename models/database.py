@@ -3,6 +3,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, relationship
 from datetime import datetime
 import os
+from urllib.parse import quote_plus
 
 Base = declarative_base()
 
@@ -53,7 +54,13 @@ class ModelVersion(Base):
 
 def init_db():
     """Initialize the database connection and create tables"""
-    database_url = os.getenv('DATABASE_URL', 'postgresql://postgres:postgres@localhost:5432/water_quality')
+    DB_USER = os.getenv("DB_USER", "postgres")
+    DB_PASSWORD = os.getenv("DB_PASSWORD", "Marsmission@11")
+    DB_HOST = os.getenv("DB_HOST", "localhost")
+    DB_PORT = os.getenv("DB_PORT", "5433")
+    DB_NAME = os.getenv("DB_NAME", "water_quality")
+
+    database_url = f"postgresql://{DB_USER}:{quote_plus(DB_PASSWORD)}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
     engine = create_engine(database_url)
     Base.metadata.create_all(engine)
     Session = sessionmaker(bind=engine)

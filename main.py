@@ -130,9 +130,10 @@ app = FastAPI(
 )
 
 # Enable CORS
+allowed_origins = os.getenv("ALLOWED_ORIGINS", "http://localhost:3000").split(",")
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],  # Frontend URL
+    allow_origins=allowed_origins,  # Frontend URL from environment variable
     allow_credentials=True,
     allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allow_headers=["*"],
@@ -155,8 +156,10 @@ async def startup_event():
 try:
     model = joblib.load('models/water_quality_model.joblib')
     predictor.train("data/aquaattributes.xlsx")
+    print("Model loaded successfully")
 except Exception as e:
     print(f"Warning: Could not load model: {e}")
+    print("Model will be trained during first request")
 
 @app.get("/health")
 async def health_check():

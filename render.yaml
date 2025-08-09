@@ -1,0 +1,27 @@
+services:
+  - type: web
+    name: water-quality-backend
+    env: python
+    plan: starter
+    buildCommand: chmod +x build.sh && ./build.sh
+    startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.0
+      - key: SECRET_KEY
+        generateValue: true
+      - key: ALGORITHM
+        value: HS256
+      - key: ACCESS_TOKEN_EXPIRE_MINUTES
+        value: 30
+      - key: DEBUG
+        value: false
+      - key: ALLOWED_ORIGINS
+        value: https://your-frontend-domain.onrender.com
+    healthCheckPath: /health
+
+databases:
+  - name: water-quality-db
+    databaseName: water_quality
+    user: water_quality_user
+    plan: starter 

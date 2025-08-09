@@ -1,11 +1,11 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from database.models import Base
-from database.config import DATABASE_URL
+from database.config import SQLALCHEMY_DATABASE_URL
 
 def init_db():
     # Create database engine
-    engine = create_engine(DATABASE_URL)
+    engine = create_engine(SQLALCHEMY_DATABASE_URL)
     
     # Create all tables
     Base.metadata.create_all(engine)
