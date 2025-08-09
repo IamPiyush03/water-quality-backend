@@ -131,6 +131,16 @@ app = FastAPI(
 
 # Enable CORS
 allowed_origins = os.getenv("ALLOWED_ORIGINS", "http://localhost:3000").split(",")
+# Add Vercel domains and common frontend URLs
+allowed_origins.extend([
+    "https://water-quality-frontend-seven.vercel.app",
+    "https://water-quality-frontend-git-main-piyushs-projects-815384e6.vercel.app",
+    "https://water-quality-frontend-nb5jz0amj-piyushs-projects-815384e6.vercel.app",
+    "https://*.vercel.app",
+    "http://localhost:3000",
+    "http://127.0.0.1:3000"
+])
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=allowed_origins,  # Frontend URL from environment variable
@@ -146,15 +156,22 @@ recommender = WaterQualityRecommender()
 # Initialize visualizer with a database session
 @app.on_event("startup")
 async def startup_event():
-    # Create database tables if they don't exist
-    from database.config import Base, engine
-    Base.metadata.create_all(bind=engine)
-    
-    db = SessionLocal()
     try:
-        app.state.visualizer = WaterQualityVisualizer(session=db)
-    finally:
-        db.close()
+        # Create database tables if they don't exist
+        from database.config import Base, engine
+        Base.metadata.create_all(bind=engine)
+        print("Database tables created successfully")
+        
+        db = SessionLocal()
+        try:
+            app.state.visualizer = WaterQualityVisualizer(session=db)
+            print("Visualizer initialized successfully")
+        finally:
+            db.close()
+    except Exception as e:
+        print(f"Database initialization error: {e}")
+        # Don't fail the startup, just log the error
+        pass
 
 # Load the trained model
 try:
